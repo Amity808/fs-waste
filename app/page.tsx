@@ -7,11 +7,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "@/components/ui/Confetti";
 import { useConfetti } from "@/hooks/useConfetti";
 import { DatasetsViewer } from "@/components/DatasetsViewer";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { Navbar } from "@/components/ui/Navbar";
 import { useBalances } from "@/hooks/useBalances";
 import Github from "@/components/ui/icons/Github";
 import Filecoin from "@/components/ui/icons/Filecoin";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 type Tab = "manage-storage" | "upload" | "datasets";
 
@@ -71,6 +72,7 @@ export default function Home() {
 
   return (
     <div className="w-full flex flex-col justify-center min-h-fit">
+      <Navbar />
       {showConfetti && (
         <Confetti
           recycle={false}
@@ -142,24 +144,6 @@ export default function Home() {
           </span>
         </motion.p>
 
-        {/* Waste Management Navigation */}
-        <motion.div
-          variants={itemVariants}
-          className="mb-6"
-        >
-          <motion.a
-            href="/waste-management"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors shadow-lg"
-          >
-            <span className="mr-2">🗑️</span>
-            Waste Management System
-            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </motion.a>
-        </motion.div>
         {chainId !== 314159 && (
           <motion.p
             variants={itemVariants}
@@ -208,8 +192,8 @@ export default function Home() {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleTabChange("manage-storage")}
                   className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors ${activeTab === "manage-storage"
-                      ? "border-primary text-primary-foreground bg-primary"
-                      : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
+                    ? "border-primary text-primary-foreground bg-primary"
+                    : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
                     }`}
                 >
                   Manage Storage
@@ -219,8 +203,8 @@ export default function Home() {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleTabChange("upload")}
                   className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors ${activeTab === "upload"
-                      ? "border-primary text-primary-foreground bg-primary"
-                      : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
+                    ? "border-primary text-primary-foreground bg-primary"
+                    : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
                     }`}
                 >
                   Upload File
@@ -230,8 +214,8 @@ export default function Home() {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleTabChange("datasets")}
                   className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors ${activeTab === "datasets"
-                      ? "border-primary text-primary-foreground bg-primary"
-                      : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
+                    ? "border-primary text-primary-foreground bg-primary"
+                    : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
                     }`}
                 >
                   View Datasets

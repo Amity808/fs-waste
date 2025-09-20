@@ -2,35 +2,12 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Navbar } from '@/components/ui/Navbar';
 
 const WasteManagementLandingPage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-            {/* Navigation */}
-            <nav className="bg-white shadow-sm sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <h1 className="text-2xl font-bold text-green-600">EcoWaste</h1>
-                            </div>
-                        </div>
-                        <div className="hidden md:block">
-                            <div className="ml-10 flex items-baseline space-x-4">
-                                <a href="#features" className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Features</a>
-                                <a href="#how-it-works" className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">How It Works</a>
-                                <a href="#pricing" className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Pricing</a>
-                                <a href="#contact" className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
-                            </div>
-                        </div>
-                        <div className="flex space-x-4">
-                            <button className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition-colors">
-                                Get Started
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            <Navbar />
 
             {/* Hero Section */}
             <section className="relative py-20 px-4 sm:px-6 lg:px-8">
