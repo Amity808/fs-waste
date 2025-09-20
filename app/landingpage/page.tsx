@@ -100,7 +100,7 @@ const WasteManagementLandingPage = () => {
                                     </div>
                                     <div className="pt-4 border-t">
                                         <div className="flex items-center justify-between text-sm">
-                                            <span className="text-gray-600">This Month's Impact</span>
+                                            <span className="text-gray-600">This Month&apos;s Impact</span>
                                             <span className="text-green-600 font-semibold">-15% Carbon Footprint</span>
                                         </div>
                                     </div>
@@ -204,7 +204,7 @@ const WasteManagementLandingPage = () => {
                                 </div>
                             </div>
                             <p className="text-gray-600 italic">
-                                "EcoWaste helped us reduce waste by 40% in just 6 months. The smart scheduling and community engagement features made all the difference."
+                                &ldquo;EcoWaste helped us reduce waste by 40% in just 6 months. The smart scheduling and community engagement features made all the difference.&rdquo;
                             </p>
                             <p className="text-sm text-gray-500 mt-4">- Sarah Johnson, City Manager</p>
                         </div>
@@ -220,7 +220,7 @@ const WasteManagementLandingPage = () => {
                                 </div>
                             </div>
                             <p className="text-gray-600 italic">
-                                "We saved over $2 million annually through optimized collection routes and reduced contamination rates."
+                                &ldquo;We saved over $2 million annually through optimized collection routes and reduced contamination rates.&rdquo;
                             </p>
                             <p className="text-sm text-gray-500 mt-4">- Michael Chen, Operations Director</p>
                         </div>
@@ -236,7 +236,7 @@ const WasteManagementLandingPage = () => {
                                 </div>
                             </div>
                             <p className="text-gray-600 italic">
-                                "95% of our residents love the real-time tracking and environmental impact features. It's changed how they think about waste."
+                                &ldquo;95% of our residents love the real-time tracking and environmental impact features. It&apos;s changed how they think about waste.&rdquo;
                             </p>
                             <p className="text-sm text-gray-500 mt-4">- Lisa Rodriguez, Sustainability Coordinator</p>
                         </div>
@@ -443,7 +443,7 @@ const WasteManagementLandingPage = () => {
 
                         <div className="bg-gray-50 p-6 rounded-lg">
                             <h3 className="text-lg font-semibold text-gray-900 mb-3">What data do you collect and how is it used?</h3>
-                            <p className="text-gray-600">We collect only essential data like collection schedules, waste types, and location information. This data is used solely to improve our services and is never sold to third parties. We're fully GDPR compliant.</p>
+                            <p className="text-gray-600">We collect only essential data like collection schedules, waste types, and location information. This data is used solely to improve our services and is never sold to third parties. We&apos;re fully GDPR compliant.</p>
                         </div>
 
                         <div className="bg-gray-50 p-6 rounded-lg">
