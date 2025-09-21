@@ -33,7 +33,8 @@ export const DashboardPage = () => {
     const {
         wasteCounter,
         hospitalCounter,
-        isLoading: contractLoading
+        isLoading: contractLoading,
+        getAllWasteRecords
     } = useWasteContract();
 
     const [recentWaste, setRecentWaste] = useState<WasteRecord[]>([]);
@@ -59,13 +60,13 @@ export const DashboardPage = () => {
 
             // Calculate stats from real data
             const totalWaste = realWasteRecords.length;
-            const totalWeight = realWasteRecords.reduce((sum, waste) => sum + waste.weight, 0);
-            const totalAmount = realWasteRecords.reduce((sum, waste) => sum + waste.wasteAmount, 0);
-            const pendingValidation = realWasteRecords.filter(w => w.isRecorded && !w.isValidated).length;
-            const validated = realWasteRecords.filter(w => w.isValidated).length;
-            const paid = realWasteRecords.filter(w => w.isPaid).length;
+            const totalWeight = realWasteRecords.reduce((sum: number, waste: WasteRecord) => sum + waste.weight, 0);
+            const totalAmount = realWasteRecords.reduce((sum: number, waste: WasteRecord) => sum + waste.wasteAmount, 0);
+            const pendingValidation = realWasteRecords.filter((w: WasteRecord) => w.isRecorded && !w.isValidated).length;
+            const validated = realWasteRecords.filter((w: WasteRecord) => w.isValidated).length;
+            const paid = realWasteRecords.filter((w: WasteRecord) => w.isPaid).length;
 
-            const wasteByType = realWasteRecords.reduce((acc, waste) => {
+            const wasteByType = realWasteRecords.reduce((acc: Record<string, number>, waste: WasteRecord) => {
                 acc[waste.wasteType] = (acc[waste.wasteType] || 0) + 1;
                 return acc;
             }, {} as Record<string, number>);
