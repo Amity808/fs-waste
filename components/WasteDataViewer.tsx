@@ -2,9 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSynapse } from '@/providers/SynapseProvider';
+import { useWasteContract } from '@/hooks/useWasteContract';
+import toast from 'react-hot-toast';
 
 interface WasteDataViewerProps {
     ipfsHash: string;
+    wasteId?: number;
     onClose: () => void;
 }
 
@@ -26,60 +29,93 @@ interface WasteData {
     };
 }
 
-export const WasteDataViewer: React.FC<WasteDataViewerProps> = ({ ipfsHash, onClose }) => {
+export const WasteDataViewer: React.FC<WasteDataViewerProps> = ({ ipfsHash, wasteId, onClose }) => {
     const [wasteData, setWasteData] = useState<WasteData | null>(null);
+    const [blockchainData, setBlockchainData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [hasAttemptedFetch, setHasAttemptedFetch] = useState(false);
     const { synapse } = useSynapse();
+    const { getWasteInfo } = useWasteContract();
+
+    // Reset fetch attempt when props change
+    useEffect(() => {
+        setHasAttemptedFetch(false);
+        setWasteData(null);
+        setBlockchainData(null);
+        setError(null);
+    }, [ipfsHash, wasteId]);
 
     useEffect(() => {
+        // Prevent infinite loops by checking if we've already attempted to fetch
+        if (hasAttemptedFetch || !ipfsHash) {
+            return;
+        }
+
         const fetchWasteData = async () => {
             try {
                 setLoading(true);
                 setError(null);
+                setHasAttemptedFetch(true);
 
-                // In a real implementation, you would fetch the JSON data from IPFS
-                // For now, we'll simulate it with dummy data
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-                const mockData: WasteData = {
-                    depositor: 'John Doe',
-                    wasteType: 'Plastic',
-                    collectionLocation: 'Downtown Hospital',
-                    weight: 25.5,
-                    wasteAmount: 50,
-                    hospitalAddress: '0x1234567890abcdef1234567890abcdef12345678',
-                    producer: '0xabcdef1234567890abcdef1234567890abcdef12',
-                    timestamp: Date.now(),
-                    metadata: {
-                        fileUploads: [
-                            {
-                                cid: 'QmExample1',
-                                filename: 'waste-photo-1.jpg',
-                                fileType: 'image/jpeg'
-                            },
-                            {
-                                cid: 'QmExample2',
-                                filename: 'weight-certificate.pdf',
-                                fileType: 'application/pdf'
-                            }
-                        ]
+                // Fetch blockchain data if wasteId is provided
+                if (wasteId !== undefined) {
+                    try {
+                        const { data: blockchainInfo } = getWasteInfo(wasteId);
+                        if (blockchainInfo) {
+                            setBlockchainData(blockchainInfo);
+                        }
+                    } catch (blockchainErr) {
+                        console.warn('Failed to fetch blockchain data:', blockchainErr);
                     }
+                }
+
+                // Fetch IPFS data
+                if (!synapse) {
+                    throw new Error('Synapse not available');
+                }
+
+                console.log('Fetching data from IPFS hash:', ipfsHash);
+
+                // Download the JSON data from IPFS with timeout
+                const downloadPromise = synapse.storage.download(ipfsHash);
+                const timeoutPromise = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('IPFS download timeout')), 10000)
+                );
+
+                const uint8ArrayBytes = await Promise.race([downloadPromise, timeoutPromise]) as Uint8Array;
+                const jsonString = new TextDecoder().decode(uint8ArrayBytes);
+                const ipfsData = JSON.parse(jsonString);
+
+                console.log('Fetched IPFS data:', ipfsData);
+
+                // Convert IPFS data to our WasteData format
+                const wasteData: WasteData = {
+                    depositor: ipfsData.depositor || 'Unknown',
+                    wasteType: ipfsData.wasteType || 'Unknown',
+                    collectionLocation: ipfsData.collectionLocation || 'Unknown',
+                    weight: ipfsData.weight || 0,
+                    wasteAmount: ipfsData.wasteAmount || 0,
+                    hospitalAddress: ipfsData.hospitalAddress || '0x0000000000000000000000000000000000000000',
+                    producer: ipfsData.producer || '0x0000000000000000000000000000000000000000',
+                    timestamp: ipfsData.timestamp || Date.now(),
+                    metadata: ipfsData.metadata || {}
                 };
 
-                setWasteData(mockData);
-            } catch (err) {
-                setError('Failed to fetch waste data from IPFS');
+                setWasteData(wasteData);
+                toast.success('Waste data loaded successfully!');
+
+            } catch (err: any) {
                 console.error('Error fetching waste data:', err);
+                setError(`Failed to fetch IPFS data: ${err.message}`);
+                toast.error(`Failed to fetch IPFS data: ${err.message}`);
             } finally {
                 setLoading(false);
             }
         };
 
-        if (ipfsHash) {
-            fetchWasteData();
-        }
-    }, [ipfsHash]);
+        fetchWasteData();
+    }, [ipfsHash, wasteId, synapse, hasAttemptedFetch]); // Added hasAttemptedFetch to dependencies
 
     const handleDownloadFile = async (cid: string, filename: string) => {
         try {
@@ -99,7 +135,7 @@ export const WasteDataViewer: React.FC<WasteDataViewerProps> = ({ ipfsHash, onCl
             URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Error downloading file:', error);
-            alert('Failed to download file');
+            toast.error('Failed to download file');
         }
     };
 
@@ -218,12 +254,57 @@ export const WasteDataViewer: React.FC<WasteDataViewerProps> = ({ ipfsHash, onCl
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-sm font-medium text-gray-500">Producer Address</label>
-                                    <p className="text-gray-900 font-mono text-sm break-all">{wasteData.producer}</p>
+                                    <p className="text-gray-900 font-mono text-sm break-all">
+                                        {blockchainData?.[1] || wasteData.producer}
+                                    </p>
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium text-gray-500">Hospital Address</label>
-                                    <p className="text-gray-900 font-mono text-sm break-all">{wasteData.hospitalAddress}</p>
+                                    <p className="text-gray-900 font-mono text-sm break-all">
+                                        {blockchainData?.[5] || wasteData.hospitalAddress}
+                                    </p>
                                 </div>
+                                {blockchainData && (
+                                    <>
+                                        <div>
+                                            <label className="text-sm font-medium text-gray-500">Waste Admin</label>
+                                            <p className="text-gray-900 font-mono text-sm break-all">{blockchainData[0]}</p>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium text-gray-500">IPFS Hash (Blockchain)</label>
+                                            <p className="text-gray-900 font-mono text-sm break-all">{blockchainData[2]}</p>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium text-gray-500">Weight (Blockchain)</label>
+                                            <p className="text-gray-900">{Number(blockchainData[3])} kg</p>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium text-gray-500">Waste Amount (Blockchain)</label>
+                                            <p className="text-gray-900">{Number(blockchainData[4]) / 1e18} USDFC</p>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium text-gray-500">Timestamp (Blockchain)</label>
+                                            <p className="text-gray-900">{new Date(Number(blockchainData[6]) * 1000).toLocaleString()}</p>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium text-gray-500">Status</label>
+                                            <div className="flex space-x-2">
+                                                <span className={`px-2 py-1 text-xs font-medium rounded-full ${blockchainData[7] ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                                    }`}>
+                                                    {blockchainData[7] ? 'Recorded' : 'Not Recorded'}
+                                                </span>
+                                                <span className={`px-2 py-1 text-xs font-medium rounded-full ${blockchainData[8] ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                                    }`}>
+                                                    {blockchainData[8] ? 'Validated' : 'Not Validated'}
+                                                </span>
+                                                <span className={`px-2 py-1 text-xs font-medium rounded-full ${blockchainData[9] ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                                    }`}>
+                                                    {blockchainData[9] ? 'Paid' : 'Not Paid'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
 
@@ -279,7 +360,7 @@ export const WasteDataViewer: React.FC<WasteDataViewerProps> = ({ ipfsHash, onCl
                                 onClick={() => {
                                     // Copy IPFS hash to clipboard
                                     navigator.clipboard.writeText(ipfsHash);
-                                    alert('IPFS hash copied to clipboard!');
+                                    toast.success('IPFS hash copied to clipboard!');
                                 }}
                                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                             >

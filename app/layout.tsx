@@ -10,6 +10,7 @@ import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { ConfettiProvider } from "@/providers/ConfettiProvider";
+import { ToastProvider } from "@/providers/ToastProvider";
 import Footer from "@/components/ui/Footer";
 import { GeolocationProvider } from "@/providers/GeolocationProvider";
 import { SynapseProvider } from "@/providers/SynapseProvider";
@@ -60,6 +61,7 @@ export default function RootLayout({
                     initialChain={filecoinCalibration.id}
                   >
                     <SynapseProvider>
+                      <ToastProvider />
                       <main className="flex flex-col min-h-screen">
                         {children}
                       </main>

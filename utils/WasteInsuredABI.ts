@@ -1,4 +1,41 @@
 export const WasteInsuredABI = [
+
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "fee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
+            }
+        ],
+        "name": "addNewToken",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address payable",
+                "name": "_collector",
+                "type": "address"
+            }
+        ],
+        "name": "assignProducer",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
     {
         "inputs": [],
         "stateMutability": "nonpayable",
@@ -37,6 +74,42 @@ export const WasteInsuredABI = [
                 "internalType": "address",
                 "name": "token",
                 "type": "address"
+            }
+        ],
+        "name": "DeleteToken",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "fee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
+            }
+        ],
+        "name": "editToken",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
             },
             {
                 "indexed": false,
@@ -58,20 +131,7 @@ export const WasteInsuredABI = [
         "anonymous": false,
         "inputs": [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            }
-        ],
-        "name": "DeleteToken",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
+                "indexed": true,
                 "internalType": "address",
                 "name": "wasteAdmin",
                 "type": "address"
@@ -90,7 +150,7 @@ export const WasteInsuredABI = [
         "anonymous": false,
         "inputs": [
             {
-                "indexed": false,
+                "indexed": true,
                 "internalType": "address",
                 "name": "wasteAdmin",
                 "type": "address"
@@ -146,7 +206,7 @@ export const WasteInsuredABI = [
         "anonymous": false,
         "inputs": [
             {
-                "indexed": false,
+                "indexed": true,
                 "internalType": "address",
                 "name": "recipient",
                 "type": "address"
@@ -160,6 +220,121 @@ export const WasteInsuredABI = [
         ],
         "name": "PaymentSent",
         "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_ipfsHash",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_weight",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_wasteAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address payable",
+                "name": "_hospitalAddress",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_timestamp",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "_isRecorded",
+                "type": "bool"
+            }
+        ],
+        "name": "recordWaste",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_image",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_location",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_hospitalType",
+                "type": "string"
+            },
+            {
+                "internalType": "address payable",
+                "name": "_walletAddress",
+                "type": "address"
+            }
+        ],
+        "name": "registerPartnerHospital",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            }
+        ],
+        "name": "removeToken",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_wasteId",
+                "type": "uint256"
+            }
+        ],
+        "name": "validateWaste",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_wasteId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "tokenW",
+                "type": "address"
+            }
+        ],
+        "name": "wastePayment",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
         "anonymous": false,
@@ -179,19 +354,7 @@ export const WasteInsuredABI = [
             {
                 "indexed": false,
                 "internalType": "string",
-                "name": "depositor",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "wasteType",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "collectionLocation",
+                "name": "ipfsHash",
                 "type": "string"
             },
             {
@@ -208,9 +371,15 @@ export const WasteInsuredABI = [
             },
             {
                 "indexed": false,
-                "internalType": "address",
+                "internalType": "address payable",
                 "name": "hospitalAddress",
                 "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "timestamp",
+                "type": "uint256"
             }
         ],
         "name": "WasteRecorded",
@@ -238,57 +407,19 @@ export const WasteInsuredABI = [
     {
         "inputs": [
             {
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            },
-            {
                 "internalType": "uint256",
-                "name": "fee",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "balance",
+                "name": "_amount",
                 "type": "uint256"
             }
         ],
-        "name": "addNewToken",
+        "name": "withdrawFunds",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "address payable",
-                "name": "_collector",
-                "type": "address"
-            }
-        ],
-        "name": "assignProducer",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "assignedCollector",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
+        "stateMutability": "payable",
+        "type": "receive"
     },
     {
         "inputs": [
@@ -314,6 +445,25 @@ export const WasteInsuredABI = [
                 "internalType": "uint256",
                 "name": "balance",
                 "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "assignedCollector",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
             }
         ],
         "stateMutability": "view",
@@ -372,19 +522,6 @@ export const WasteInsuredABI = [
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "getWasteLength",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -410,34 +547,9 @@ export const WasteInsuredABI = [
                 "type": "string"
             },
             {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            },
-            {
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            },
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            },
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
             },
             {
                 "internalType": "uint256",
@@ -448,6 +560,104 @@ export const WasteInsuredABI = [
                 "internalType": "address payable",
                 "name": "",
                 "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getWasteLength",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_producer",
+                "type": "address"
+            }
+        ],
+        "name": "getWasteRecordsByProducer",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getWasteStats",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalWaste",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalWeight",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "validatedCount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "paidCount",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "hospitalCounter",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -493,109 +703,6 @@ export const WasteInsuredABI = [
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "hospitalCounter",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_depositor",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_wasteType",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_collectionLocation",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_weight",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_wasteAmount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address payable",
-                "name": "_hospitalAddress",
-                "type": "address"
-            }
-        ],
-        "name": "recordWaste",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            }
-        ],
-        "name": "removeToken",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_image",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_location",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_hospitalType",
-                "type": "string"
-            },
-            {
-                "internalType": "address payable",
-                "name": "_walletAddress",
-                "type": "address"
-            }
-        ],
-        "name": "registerPartnerHospital",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "receive",
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -626,56 +733,25 @@ export const WasteInsuredABI = [
     },
     {
         "inputs": [],
-        "name": "tokenSaved",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_wasteId",
-                "type": "uint256"
-            }
-        ],
-        "name": "validateWaste",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_wasteId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address",
-                "name": "tokenW",
-                "type": "address"
-            }
-        ],
-        "name": "wastePayment",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
         "name": "wasteAdmin",
         "outputs": [
             {
                 "internalType": "address payable",
                 "name": "",
                 "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "wasteCounter",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -703,22 +779,27 @@ export const WasteInsuredABI = [
             },
             {
                 "internalType": "string",
-                "name": "depositor",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "wasteType",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "collectionLocation",
+                "name": "ipfsHash",
                 "type": "string"
             },
             {
                 "internalType": "uint256",
                 "name": "weight",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "wasteAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address payable",
+                "name": "hospitalAddress",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "timestamp",
                 "type": "uint256"
             },
             {
@@ -735,68 +816,10 @@ export const WasteInsuredABI = [
                 "internalType": "bool",
                 "name": "isPaid",
                 "type": "bool"
-            },
-            {
-                "internalType": "uint256",
-                "name": "wasteAmount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address payable",
-                "name": "hospitalAddress",
-                "type": "address"
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "wasteCounter",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "withdrawFunds",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "token",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "fee",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "balance",
-                "type": "uint256"
-            }
-        ],
-        "name": "editToken",
-        "outputs": [],
-        "stateMutability": "nonpayable",
         "type": "function"
     }
+
 ] as const;

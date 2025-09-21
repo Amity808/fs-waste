@@ -1,4 +1,5 @@
 import { useFileUpload } from '@/hooks/useFileUpload';
+import toast from 'react-hot-toast';
 
 export interface WasteData {
     depositor: string;
@@ -40,15 +41,17 @@ export const useWasteDataUpload = () => {
 
             if (ipfsHash) {
                 console.log(`File uploaded successfully with IPFS hash: ${ipfsHash}`);
-                const fullUrl = `https://0x416f7ae46d370a0dea72156aa9ae27de48dcd8d2.calibration.filcdn.io/${ipfsHash}`;
-                return fullUrl;
+                // Return just the CID, not the full URL
+                return ipfsHash;
             } else {
                 console.warn(`Could not get IPFS hash, using mock hash for: ${file.name}`);
-                const mockHash = `Qm${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
-                return `https://0x416f7ae46d370a0dea72156aa9ae27de48dcd8d2.calibration.filcdn.io/${mockHash}`;
+                // Generate a proper mock CID format (bafk...)
+                const mockHash = `bafk${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
+                return mockHash;
             }
         } catch (error) {
             console.error(`Failed to upload file ${file.name}:`, error);
+            toast.error(`Failed to upload file ${file.name}`);
             throw error;
         }
     };
@@ -80,7 +83,7 @@ export const useWasteDataUpload = () => {
                     } catch (error) {
                         console.error(`Failed to upload evidence file ${i + 1}:`, error);
                         evidenceFileData.push({
-                            cid: `Qm${Math.random().toString(36).substring(2, 15)}`,
+                            cid: `bafk${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
                             filename: file.name,
                             fileType: file.type || 'unknown'
                         });
@@ -131,12 +134,11 @@ export const useWasteDataUpload = () => {
             } catch (error: any) {
                 console.error('Failed to upload waste data JSON:', error);
 
-                const mockHash = `Qm${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
-                const mockUrl = `https://0x416f7ae46d370a0dea72156aa9ae27de48dcd8d2.calibration.filcdn.io/${mockHash}`;
-                console.warn('Using mock IPFS hash for waste data:', mockUrl);
+                const mockHash = `bafk${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
+                console.warn('Using mock IPFS hash for waste data:', mockHash);
 
                 return {
-                    ipfsHash: mockUrl,
+                    ipfsHash: mockHash,
                     wasteDataFile: wasteDataFile,
                     evidenceFiles: evidenceFileData,
                     completeData: completeWasteData
@@ -149,17 +151,17 @@ export const useWasteDataUpload = () => {
             if (error?.message?.includes('Failed to fetch') || error?.message?.includes('addPieces failed')) {
                 console.warn('Network error detected, using fallback mode...');
 
-                const mockHash = `Qm${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
-                const mockUrl = `https://0x416f7ae46d370a0dea72156aa9ae27de48dcd8d2.calibration.filcdn.io/${mockHash}`;
+                const mockHash = `bafk${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
 
                 return {
-                    ipfsHash: mockUrl,
+                    ipfsHash: mockHash,
                     wasteDataFile: new File([JSON.stringify(wasteData, null, 2)], `waste-${wasteData.depositor}-${Date.now()}.json`),
                     evidenceFiles: [],
                     completeData: wasteData
                 };
             }
 
+            toast.error(`Failed to upload waste data to Filecoin: ${error?.message || 'Unknown error'}`);
             throw new Error(`Failed to upload waste data to Filecoin: ${error?.message || 'Unknown error'}`);
         }
     };

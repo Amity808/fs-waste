@@ -53,120 +53,19 @@ export const DashboardPage = () => {
         const fetchDashboardData = async () => {
             setIsLoading(true);
 
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // Fetch real data from blockchain
+            const realWasteRecords = await getAllWasteRecords();
+            setRecentWaste(realWasteRecords);
 
-            // Dummy data with more records for better demonstration
-            const mockWaste: WasteRecord[] = [
-                {
-                    id: 1,
-                    depositor: 'John Doe',
-                    wasteType: 'Plastic',
-                    collectionLocation: 'Downtown Hospital',
-                    weight: 25.5,
-                    isRecorded: true,
-                    isValidated: true,
-                    isPaid: true,
-                    wasteAmount: 50,
-                    hospitalAddress: '0x123...'
-                },
-                {
-                    id: 2,
-                    depositor: 'Jane Smith',
-                    wasteType: 'Metal',
-                    collectionLocation: 'Green Valley Medical',
-                    weight: 15.2,
-                    isRecorded: true,
-                    isValidated: false,
-                    isPaid: false,
-                    wasteAmount: 30,
-                    hospitalAddress: '0x456...'
-                },
-                {
-                    id: 3,
-                    depositor: 'Bob Johnson',
-                    wasteType: 'Organic',
-                    collectionLocation: 'City General',
-                    weight: 40.0,
-                    isRecorded: true,
-                    isValidated: true,
-                    isPaid: false,
-                    wasteAmount: 75,
-                    hospitalAddress: '0x789...'
-                },
-                {
-                    id: 4,
-                    depositor: 'Alice Brown',
-                    wasteType: 'Electronic',
-                    collectionLocation: 'Tech Medical Center',
-                    weight: 8.7,
-                    isRecorded: true,
-                    isValidated: false,
-                    isPaid: false,
-                    wasteAmount: 120,
-                    hospitalAddress: '0xabc...'
-                },
-                {
-                    id: 5,
-                    depositor: 'Charlie Wilson',
-                    wasteType: 'Glass',
-                    collectionLocation: 'Metro Hospital',
-                    weight: 32.1,
-                    isRecorded: true,
-                    isValidated: true,
-                    isPaid: true,
-                    wasteAmount: 45,
-                    hospitalAddress: '0xdef...'
-                },
-                {
-                    id: 6,
-                    depositor: 'Diana Prince',
-                    wasteType: 'Plastic',
-                    collectionLocation: 'Central Medical',
-                    weight: 18.3,
-                    isRecorded: true,
-                    isValidated: true,
-                    isPaid: true,
-                    wasteAmount: 35,
-                    hospitalAddress: '0xghi...'
-                },
-                {
-                    id: 7,
-                    depositor: 'Eva Martinez',
-                    wasteType: 'Hazardous',
-                    collectionLocation: 'Safety Hospital',
-                    weight: 12.5,
-                    isRecorded: true,
-                    isValidated: false,
-                    isPaid: false,
-                    wasteAmount: 200,
-                    hospitalAddress: '0xjkl...'
-                },
-                {
-                    id: 8,
-                    depositor: 'Frank Miller',
-                    wasteType: 'Paper',
-                    collectionLocation: 'Green Valley Medical',
-                    weight: 22.8,
-                    isRecorded: true,
-                    isValidated: true,
-                    isPaid: false,
-                    wasteAmount: 28,
-                    hospitalAddress: '0x456...'
-                }
-            ];
+            // Calculate stats from real data
+            const totalWaste = realWasteRecords.length;
+            const totalWeight = realWasteRecords.reduce((sum, waste) => sum + waste.weight, 0);
+            const totalAmount = realWasteRecords.reduce((sum, waste) => sum + waste.wasteAmount, 0);
+            const pendingValidation = realWasteRecords.filter(w => w.isRecorded && !w.isValidated).length;
+            const validated = realWasteRecords.filter(w => w.isValidated).length;
+            const paid = realWasteRecords.filter(w => w.isPaid).length;
 
-            setRecentWaste(mockWaste);
-
-            // Calculate stats
-            const totalWaste = mockWaste.length;
-            const totalWeight = mockWaste.reduce((sum, waste) => sum + waste.weight, 0);
-            const totalAmount = mockWaste.reduce((sum, waste) => sum + waste.wasteAmount, 0);
-            const pendingValidation = mockWaste.filter(w => w.isRecorded && !w.isValidated).length;
-            const validated = mockWaste.filter(w => w.isValidated).length;
-            const paid = mockWaste.filter(w => w.isPaid).length;
-
-            const wasteByType = mockWaste.reduce((acc, waste) => {
+            const wasteByType = realWasteRecords.reduce((acc, waste) => {
                 acc[waste.wasteType] = (acc[waste.wasteType] || 0) + 1;
                 return acc;
             }, {} as Record<string, number>);

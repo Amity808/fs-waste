@@ -7,6 +7,7 @@ import { useFileUpload } from '@/hooks/useFileUpload';
 import { useWasteDataUpload } from '@/utils/wasteDataUpload';
 import { getNetworkTroubleshootingTips } from '@/utils/networkCheck';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 interface WasteFormData {
     depositor: string;
@@ -102,13 +103,13 @@ export const RecordWastePage = () => {
         e.preventDefault();
 
         if (!isConnected) {
-            alert('Please connect your wallet first');
+            toast.error('Please connect your wallet first');
             return;
         }
 
         if (!formData.depositor || !formData.wasteType || !formData.collectionLocation ||
             !formData.weight || !formData.wasteAmount || !formData.hospitalAddress) {
-            alert('Please fill in all required fields');
+            toast.error('Please fill in all required fields');
             return;
         }
 
@@ -144,6 +145,7 @@ export const RecordWastePage = () => {
             setContractResult(contractResult);
 
             setSuccess(true);
+            toast.success('Waste data recorded successfully!');
             setFormData({
                 depositor: '',
                 wasteType: '',
@@ -165,7 +167,7 @@ export const RecordWastePage = () => {
                 setShowTroubleshooting(true);
             }
 
-            alert(`Error: ${error.message || 'Failed to record waste'}`);
+            toast.error(`Error: ${error.message || 'Failed to record waste'}`);
         } finally {
             setIsSubmitting(false);
         }
@@ -226,6 +228,7 @@ export const RecordWastePage = () => {
                                     <p><strong>Evidence Files:</strong> {uploadedData.evidenceFiles.length} files uploaded</p>
                                     <p><strong>Data Size:</strong> {uploadedData.wasteDataFile.size} bytes</p>
                                     <p><strong>Transaction Hash:</strong> <code className="bg-green-100 px-1 rounded">{contractResult?.hash || 'Pending...'}</code></p>
+                                    <p><strong>View on Filecoin:</strong> <a href={`https://0x416f7ae46d370a0dea72156aa9ae27de48dcd8d2.calibration.filcdn.io/${uploadedData.ipfsHash}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Open in browser</a></p>
                                 </div>
 
                                 <div className="text-xs text-green-600">
@@ -251,7 +254,7 @@ export const RecordWastePage = () => {
                                     value={formData.depositor}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
                                     placeholder="Enter depositor name"
                                 />
                             </div>
@@ -267,7 +270,7 @@ export const RecordWastePage = () => {
                                     value={formData.wasteType}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
                                 >
                                     <option value="">Select waste type</option>
                                     {WASTE_TYPES.map(type => (
@@ -288,7 +291,7 @@ export const RecordWastePage = () => {
                                     value={formData.collectionLocation}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
                                     placeholder="Enter collection location"
                                 />
                             </div>
@@ -304,7 +307,7 @@ export const RecordWastePage = () => {
                                     value={formData.hospitalAddress}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
                                 >
                                     <option value="">Select hospital</option>
                                     {hospitals.map(hospital => (
@@ -329,7 +332,7 @@ export const RecordWastePage = () => {
                                     required
                                     min="0"
                                     step="0.1"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
                                     placeholder="Enter weight in kg"
                                 />
                             </div>
