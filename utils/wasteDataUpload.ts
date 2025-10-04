@@ -1,6 +1,17 @@
 import { useFileUpload } from '@/hooks/useFileUpload';
 import toast from 'react-hot-toast';
 
+// Generate a proper mock CID that follows IPFS CID format
+const generateMockCID = (): string => {
+    // Generate a proper base32-encoded string that looks like a real CID
+    const chars = 'abcdefghijklmnopqrstuvwxyz234567';
+    let result = 'bafk';
+    for (let i = 0; i < 50; i++) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return result;
+};
+
 export interface WasteData {
     depositor: string;
     wasteType: string;
@@ -46,7 +57,7 @@ export const useWasteDataUpload = () => {
             } else {
                 console.warn(`Could not get IPFS hash, using mock hash for: ${file.name}`);
                 // Generate a proper mock CID format (bafk...)
-                const mockHash = `bafk${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
+                const mockHash = generateMockCID();
                 return mockHash;
             }
         } catch (error) {
@@ -83,7 +94,7 @@ export const useWasteDataUpload = () => {
                     } catch (error) {
                         console.error(`Failed to upload evidence file ${i + 1}:`, error);
                         evidenceFileData.push({
-                            cid: `bafk${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
+                            cid: generateMockCID(),
                             filename: file.name,
                             fileType: file.type || 'unknown'
                         });
@@ -134,7 +145,7 @@ export const useWasteDataUpload = () => {
             } catch (error: any) {
                 console.error('Failed to upload waste data JSON:', error);
 
-                const mockHash = `bafk${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
+                const mockHash = generateMockCID();
                 console.warn('Using mock IPFS hash for waste data:', mockHash);
 
                 return {
@@ -151,7 +162,7 @@ export const useWasteDataUpload = () => {
             if (error?.message?.includes('Failed to fetch') || error?.message?.includes('addPieces failed')) {
                 console.warn('Network error detected, using fallback mode...');
 
-                const mockHash = `bafk${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
+                const mockHash = generateMockCID();
 
                 return {
                     ipfsHash: mockHash,

@@ -77,6 +77,11 @@ export const WasteDataViewer: React.FC<WasteDataViewerProps> = ({ ipfsHash, wast
 
                 console.log('Fetching data from IPFS hash:', ipfsHash);
 
+                // Validate IPFS hash format
+                if (!ipfsHash || ipfsHash.length < 10 || !ipfsHash.startsWith('baf')) {
+                    throw new Error(`Invalid IPFS hash format: ${ipfsHash}`);
+                }
+
                 // Download the JSON data from IPFS with timeout
                 const downloadPromise = synapse.storage.download(ipfsHash);
                 const timeoutPromise = new Promise((_, reject) =>

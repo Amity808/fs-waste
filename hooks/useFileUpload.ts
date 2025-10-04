@@ -49,13 +49,19 @@ export const useFileUpload = () => {
       // 6) Check if we have enough USDFC to cover the storage costs and deposit if not
       setStatus("💰 Checking USDFC balance and storage allowances...");
       setProgress(5);
-      await preflightCheck(
-        file,
-        synapse,
-        includeDatasetCreationFee,
-        setStatus,
-        setProgress
-      );
+
+      try {
+        await preflightCheck(
+          file,
+          synapse,
+          includeDatasetCreationFee,
+          setStatus,
+          setProgress
+        );
+      } catch (preflightError: any) {
+        console.error('Preflight check failed:', preflightError);
+        throw new Error(`Preflight check failed: ${preflightError.message}`);
+      }
 
       setStatus("🔗 Setting up storage service and dataset...");
       setProgress(25);
@@ -112,8 +118,7 @@ export const useFileUpload = () => {
         },
         onPieceAdded: (transactionResponse) => {
           setStatus(
-            `🔄 Waiting for transaction to be confirmed on chain${
-              transactionResponse ? `(txHash: ${transactionResponse.hash})` : ""
+            `🔄 Waiting for transaction to be confirmed on chain${transactionResponse ? `(txHash: ${transactionResponse.hash})` : ""
             }`
           );
           if (transactionResponse) {

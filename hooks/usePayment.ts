@@ -7,15 +7,6 @@ import { useAccount } from "wagmi";
 import { config } from "@/config";
 import { useSynapse } from "@/providers/SynapseProvider";
 
-/**
- * Hook to handle payment for storage
- * @param lockup - The lockup amount to be used for the storage
- * @param epochRate - The epoch rate to be used for the storage
- * @param depositAmount - The deposit amount to be used for the storage
- * @notice LockUp is the accoumulated amount of USDFC that the user has locked up for Storing data over time.
- * It is different from the depositAmount. Which is the amount needed to pay for more storage if required.
- * @returns Mutation and status
- */
 export const usePayment = () => {
   const [status, setStatus] = useState<string>("");
   const { triggerConfetti } = useConfetti();

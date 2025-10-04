@@ -43,7 +43,7 @@ export function WasteRecordCard({ id, searchQuery }: WasteRecordCardProps) {
         address: WASTE_CONTRACT_ADDRESS as `0x${string}`,
         abi: WasteInsuredABI,
         functionName: 'getWasteInfo',
-        args: [BigInt(id)],
+        args: [BigInt(Number(id) || 0)],
     });
 
     // Format the waste record data
@@ -103,13 +103,15 @@ export function WasteRecordCard({ id, searchQuery }: WasteRecordCardProps) {
         }
     };
 
+    console.log(wasteRecord?.ipfsHash, "waste ipfs ")
+
     const handleViewFilecoinData = () => {
-        if (wasteRecord?.ipfsHash && wasteRecord.ipfsHash !== 'Loading...') {
+        if (wasteRecord?.ipfsHash && wasteRecord.ipfsHash !== 'Loading...' && wasteRecord.ipfsHash.length >= 10 && wasteRecord.ipfsHash.startsWith('baf')) {
             setSelectedIpfsHash(wasteRecord.ipfsHash);
             setSelectedWasteId(Number(id));
             setShowFilecoinData(true);
         } else {
-            toast.error('IPFS hash not available for this record');
+            toast.error('Invalid or unavailable IPFS hash for this record');
         }
     };
 
@@ -151,14 +153,14 @@ export function WasteRecordCard({ id, searchQuery }: WasteRecordCardProps) {
                         </div>
                         <div className="flex gap-2">
                             <span className={`px-2 py-1 text-xs font-medium rounded-full ${wasteRecord.isValidated
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-yellow-100 text-yellow-800'
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-yellow-100 text-yellow-800'
                                 }`}>
                                 {wasteRecord.isValidated ? 'Validated' : 'Pending'}
                             </span>
                             <span className={`px-2 py-1 text-xs font-medium rounded-full ${wasteRecord.isPaid
-                                    ? 'bg-blue-100 text-blue-800'
-                                    : 'bg-gray-100 text-gray-800'
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-gray-100 text-gray-800'
                                 }`}>
                                 {wasteRecord.isPaid ? 'Paid' : 'Unpaid'}
                             </span>

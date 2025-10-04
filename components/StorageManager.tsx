@@ -55,13 +55,12 @@ export const StorageManager = () => {
           handleRefetchBalances={handleRefetchBalances}
         />
         <div
-          className={`mt-4 p-3 rounded-lg ${status ? "block" : "hidden"} ${
-            status.includes("❌")
-              ? "bg-red-50 border border-red-200 text-red-800"
-              : status.includes("✅")
+          className={`mt-4 p-3 rounded-lg ${status ? "block" : "hidden"} ${status.includes("❌")
+            ? "bg-red-50 border border-red-200 text-red-800"
+            : status.includes("✅")
               ? "bg-green-50 border border-green-200 text-green-800"
               : "bg-blue-50 border border-blue-200 text-blue-800"
-          }`}
+            }`}
         >
           {status}
         </div>
@@ -112,16 +111,14 @@ const AllowanceStatusSection = ({ balances, isLoading }: SectionProps) => {
             <p className="text-yellow-800">
               ⚠️ Max configured lockup is {config.persistencePeriod} days. Your
               current covered lockup is{" "}
-              {balances?.persistenceDaysLeft.toFixed(1)} days. Which is less
+              {balances?.persistenceDaysLeft?.toFixed(1) || "0.0"} days. Which is less
               than the notice period of {config.minDaysThreshold} days.
             </p>
             <p className="text-sm text-yellow-700 mt-2">
               You are currently using{" "}
               {balances?.currentStorageGB?.toLocaleString()} GB. Please deposit{" "}
               {depositNeededFormatted} USDFC to extend your lockup for{" "}
-              {(
-                config.persistencePeriod - (balances?.persistenceDaysLeft ?? 0)
-              ).toFixed(1)}{" "}
+              {(config.persistencePeriod - (balances?.persistenceDaysLeft ?? 0)).toFixed(1)}{" "}
               more days.
             </p>
           </div>
@@ -148,7 +145,7 @@ const ActionSection = ({
       <div className="p-4 bg-green-50 rounded-lg border border-green-200">
         <p className="text-green-800">
           ✅ Your storage balance is sufficient for {config.storageCapacity}GB
-          of storage for {balances.persistenceDaysLeft.toFixed(1)} days.
+          of storage for {balances?.persistenceDaysLeft?.toFixed(1) || "0.0"} days.
         </p>
       </div>
     );
@@ -162,9 +159,8 @@ const ActionSection = ({
     return (
       <div className="space-y-4">
         <div
-          className={`p-4 bg-red-50 rounded-lg border border-red-200 ${
-            balances.filBalance === 0n ? "block" : "hidden"
-          }`}
+          className={`p-4 bg-red-50 rounded-lg border border-red-200 ${balances.filBalance === 0n ? "block" : "hidden"
+            }`}
         >
           <p className="text-red-800">
             ⚠️ You need to FIL tokens to pay for transaction fees. Please
@@ -172,9 +168,8 @@ const ActionSection = ({
           </p>
         </div>
         <div
-          className={`p-4 bg-red-50 rounded-lg border border-red-200 ${
-            balances.usdfcBalance === 0n ? "block" : "hidden"
-          }`}
+          className={`p-4 bg-red-50 rounded-lg border border-red-200 ${balances.usdfcBalance === 0n ? "block" : "hidden"
+            }`}
         >
           <p className="text-red-800">
             ⚠️ You need to USDFC tokens to pay for storage. Please deposit USDFC
@@ -223,11 +218,10 @@ const ActionSection = ({
               await handleRefetchBalances();
             }}
             disabled={isProcessingPayment}
-            className={`w-full px-6 py-3 rounded-lg border-2 border-black transition-all ${
-              isProcessingPayment
-                ? "bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-black text-white hover:bg-white hover:text-black"
-            }`}
+            className={`w-full px-6 py-3 rounded-lg border-2 border-black transition-all ${isProcessingPayment
+              ? "bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-black text-white hover:bg-white hover:text-black"
+              }`}
           >
             {isProcessingPayment
               ? "Processing transactions..."
@@ -276,11 +270,10 @@ const LockupIncreaseAction = ({
           await handleRefetchBalances();
         }}
         disabled={isProcessingPayment}
-        className={`w-full px-6 py-3 rounded-lg border-2 border-black transition-all ${
-          isProcessingPayment
-            ? "bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-black text-white hover:bg-white hover:text-black"
-        }`}
+        className={`w-full px-6 py-3 rounded-lg border-2 border-black transition-all ${isProcessingPayment
+          ? "bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed"
+          : "bg-black text-white hover:bg-white hover:text-black"
+          }`}
       >
         {isProcessingPayment
           ? "Processing transactions..."
@@ -319,11 +312,10 @@ const RateIncreaseAction = ({
           await handleRefetchBalances();
         }}
         disabled={isProcessingPayment}
-        className={`w-full px-6 py-3 rounded-lg border-2 border-black transition-all ${
-          isProcessingPayment
-            ? "bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-black text-white hover:bg-white hover:text-black"
-        }`}
+        className={`w-full px-6 py-3 rounded-lg border-2 border-black transition-all ${isProcessingPayment
+          ? "bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed"
+          : "bg-black text-white hover:bg-white hover:text-black"
+          }`}
       >
         {isProcessingPayment ? "Increasing Rate..." : "Increase Rate"}
       </button>
@@ -346,9 +338,8 @@ const StorageBalanceHeader = () => {
         </p>
       </div>
       <div
-        className={`flex items-center gap-2 ${
-          chainId === 314159 ? "block" : "hidden"
-        }`}
+        className={`flex items-center gap-2 ${chainId === 314159 ? "block" : "hidden"
+          }`}
       >
         <button
           className="px-4 py-2 text-sm h-9 flex items-center justify-center rounded-lg border-2 border-black transition-all bg-black text-white hover:bg-white hover:text-black"
@@ -443,7 +434,7 @@ const StorageStatusSection = ({ balances, isLoading }: SectionProps) => (
         <span className="font-medium text-gray-600">
           {isLoading
             ? "..."
-            : `${balances?.persistenceDaysLeft.toFixed(1)} days`}
+            : `${balances?.persistenceDaysLeft?.toFixed(1) || "0.0"} days`}
         </span>
       </div>
       <div className="flex items-center justify-between p-2 bg-white rounded border border-gray-200">
@@ -454,7 +445,7 @@ const StorageStatusSection = ({ balances, isLoading }: SectionProps) => (
         <span className="font-medium text-gray-600">
           {isLoading
             ? "..."
-            : `${balances?.persistenceDaysLeftAtCurrentRate.toFixed(1)} days`}
+            : `${balances?.persistenceDaysLeftAtCurrentRate?.toFixed(1) || "0.0"} days`}
         </span>
       </div>
     </div>
@@ -471,9 +462,8 @@ const AllowanceItem = ({
   <div className="flex items-center justify-between p-2 bg-white rounded border border-gray-200">
     <span className="text-sm text-gray-600">{label}</span>
     <span
-      className={`font-medium ${
-        isSufficient ? "text-green-600" : "text-red-600"
-      }`}
+      className={`font-medium ${isSufficient ? "text-green-600" : "text-red-600"
+        }`}
     >
       {isLoading ? "..." : isSufficient ? "Sufficient" : "Insufficient"}
     </span>

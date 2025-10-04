@@ -4,20 +4,6 @@ import { Synapse, TIME_CONSTANTS } from "@filoz/synapse-sdk";
 import { WarmStorageService } from "@filoz/synapse-sdk/warm-storage";
 import { ethers } from "ethers";
 
-/**
- * Performs a preflight check before file upload to ensure sufficient USDFC balance and allowances
- * for storage costs. This function:
- * 1. Verifies signer and provider availability
- * 2. Checks if there's enough USDFC allowance for the file size
- * 3. If insufficient, handles the deposit and approval process
- *
- * @param file - The file to be uploaded
- * @param synapse - Synapse SDK instance
- * @param network - Network to use (mainnet or calibration)
- * @param includeDataSetCreationFee - Whether to include data set creation fee
- * @param updateStatus - Callback to update status messages
- * @param updateProgress - Callback to update progress percentage
- */
 export const preflightCheck = async (
   file: File,
   synapse: Synapse,
@@ -25,14 +11,11 @@ export const preflightCheck = async (
   updateStatus: (status: string) => void,
   updateProgress: (progress: number) => void
 ) => {
-  // Verify signer and provider are available
-  // Initialize Pandora service for allowance checks
   const warmStorageService = await WarmStorageService.create(
     synapse.getProvider(),
     synapse.getWarmStorageAddress()
   );
 
-  // Step 1: Check if current allowance is sufficient for the file size
   const warmStorageBalance = await warmStorageService.checkAllowanceForStorage(
     file.size,
     config.withCDN,
@@ -40,7 +23,11 @@ export const preflightCheck = async (
     config.persistencePeriod
   );
 
-  // Step 2: Check if allowances and balances are sufficient for storage and data set creation
+  // Validate warmStorageBalance properties
+  if (!warmStorageBalance || typeof warmStorageBalance.costs?.perEpoch !== 'bigint') {
+    throw new Error('Invalid warm storage balance data received');
+  }
+
   const {
     isSufficient,
     rateAllowanceNeeded,
@@ -52,11 +39,14 @@ export const preflightCheck = async (
     includeDataSetCreationFee
   );
 
-  // If allowance is insufficient, handle deposit and approval process
+  // Validate returned values
+  if (typeof rateAllowanceNeeded !== 'bigint' || typeof lockupAllowanceNeeded !== 'bigint' || typeof depositAmountNeeded !== 'bigint') {
+    throw new Error('Invalid allowance values received from checkAllowances');
+  }
+
   if (!isSufficient) {
     updateStatus("💰 Insufficient USDFC allowance...");
 
-    // Step 3: Deposit USDFC to cover storage costs
     updateStatus("💰 Depositing USDFC to cover storage costs...");
     const depositTx = await synapse.payments.deposit(
       depositAmountNeeded,
@@ -65,8 +55,7 @@ export const preflightCheck = async (
         onDepositStarting: () => updateStatus("💰 Depositing USDFC..."),
         onAllowanceCheck: (current: bigint, required: bigint) =>
           updateStatus(
-            `💰 Allowance check ${
-              current > required ? "sufficient" : "insufficient"
+            `💰 Allowance check ${current > required ? "sufficient" : "insufficient"
             }`
           ),
         onApprovalTransaction: async (tx: ethers.TransactionResponse) => {
@@ -80,7 +69,6 @@ export const preflightCheck = async (
     updateStatus("💰 USDFC deposited successfully");
     updateProgress(10);
 
-    // Step 4: Approve Filecoin Warm Storage service to spend USDFC at specified rates
     updateStatus(
       "💰 Approving Filecoin Warm Storage service USDFC spending rates..."
     );

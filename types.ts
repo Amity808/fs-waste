@@ -13,9 +13,6 @@ export interface DatasetsResponse {
   datasets: DataSet[];
 }
 
-/**
- * Interface for formatted balance data returned by useBalances
- */
 export interface UseBalancesResponse {
   filBalance: bigint;
   usdfcBalance: bigint;
@@ -56,9 +53,6 @@ export const defaultBalances: UseBalancesResponse = {
   currentLockupAllowance: 0n,
 };
 
-/**
- * Interface representing the Pandora balance data returned from the SDK
- */
 export interface WarmStorageBalance {
   rateAllowanceNeeded: bigint;
   lockupAllowanceNeeded: bigint;
@@ -76,35 +70,19 @@ export interface WarmStorageBalance {
   depositAmountNeeded: bigint;
 }
 
-/**
- * Interface representing the calculated storage metrics
- */
 export interface StorageCalculationResult {
-  /** The required rate allowance needed for storage */
   rateNeeded: bigint;
-  /** The current rate used */
   rateUsed: bigint;
-  /** The current storage usage in bytes */
   currentStorageBytes: bigint;
-  /** The current storage usage in GB */
   currentStorageGB: number;
-  /** The required lockup amount needed for storage persistence */
   totalLockupNeeded: bigint;
-  /** The additional lockup amount needed for storage persistence */
   depositNeeded: bigint;
-  /** Number of days left before lockup expires */
   persistenceDaysLeft: number;
-  /** Number of days left before lockup expires at current rate */
   persistenceDaysLeftAtCurrentRate: number;
-  /** Whether the current rate allowance is sufficient */
   isRateSufficient: boolean;
-  /** Whether the current lockup allowance is sufficient for at least the minimum days threshold */
   isLockupSufficient: boolean;
-  /** Whether both rate and lockup allowances are sufficient */
   isSufficient: boolean;
-  /** The current rate allowance in GB */
   currentRateAllowanceGB: number;
-  /** The current lockup allowance in USDFC */
   currentLockupAllowance: bigint;
 }
 

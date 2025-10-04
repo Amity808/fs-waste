@@ -84,7 +84,7 @@ export const RecordWastePage = () => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'weight' || name === 'wasteAmount' ? Number(value) : value
+            [name]: name === 'weight' || name === 'wasteAmount' ? (value === '' ? 0 : Number(value)) : value
         }));
     };
 
@@ -113,11 +113,21 @@ export const RecordWastePage = () => {
             return;
         }
 
+        // Additional validation for numeric fields
+        if (isNaN(formData.weight) || formData.weight <= 0) {
+            toast.error('Please enter a valid weight greater than 0');
+            return;
+        }
+
+        if (isNaN(formData.wasteAmount) || formData.wasteAmount <= 0) {
+            toast.error('Please enter a valid waste amount greater than 0');
+            return;
+        }
+
         setIsSubmitting(true);
         setSuccess(false);
 
         try {
-            // Step 1: Upload waste data and evidence files to Filecoin
             const wasteData = {
                 depositor: formData.depositor,
                 wasteType: formData.wasteType,
@@ -132,7 +142,6 @@ export const RecordWastePage = () => {
             const uploadResult = await uploadWasteData(wasteData, selectedFiles);
             setUploadedData(uploadResult);
 
-            // Step 2: Record waste data to smart contract (gas-optimized - only essential data)
             const selectedHospital = hospitals.find(h => h.walletAddress === formData.hospitalAddress);
             const contractResult = await recordWasteData({
                 ipfsHash: uploadResult.ipfsHash,  // All detailed data stored in IPFS

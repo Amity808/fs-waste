@@ -87,8 +87,24 @@ export const useWasteContract = () => {
                 // Continue anyway, as the user might already be assigned
             }
 
-            // Convert waste amount to wei (multiply by 10^18)
-            const wasteAmountWei = BigInt(Math.floor(wasteData.wasteAmount * 1e18));
+            // Debug: Log the input values
+            console.log('recordWasteData input:', {
+                ipfsHash: wasteData.ipfsHash,
+                weight: wasteData.weight,
+                wasteAmount: wasteData.wasteAmount,
+                hospitalAddress: wasteData.hospitalAddress
+            });
+
+            // Validate and convert waste amount to wei (multiply by 10^18)
+            if (typeof wasteData.wasteAmount !== 'number' || isNaN(wasteData.wasteAmount)) {
+                throw new Error('Invalid waste amount: must be a valid number');
+            }
+            const wasteAmountWei = BigInt(Math.floor(wasteData.wasteAmount)) * BigInt(10 ** 18);
+
+            // Validate weight
+            if (typeof wasteData.weight !== 'number' || isNaN(wasteData.weight)) {
+                throw new Error('Invalid weight: must be a valid number');
+            }
 
             const hash = await writeContractAsync({
                 address: WASTE_CONTRACT_ADDRESS as `0x${string}`,
