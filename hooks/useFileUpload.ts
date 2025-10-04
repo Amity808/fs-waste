@@ -142,6 +142,13 @@ export const useFileUpload = () => {
         fileSize: file.size,
         pieceCid: pieceCid.toV1().toString(),
       }));
+
+      // Return the pieceCid for direct access
+      return {
+        pieceCid: pieceCid.toV1().toString(),
+        fileName: file.name,
+        fileSize: file.size,
+      };
     },
     onSuccess: () => {
       setStatus("🎉 File successfully stored on Filecoin!");

@@ -36,27 +36,17 @@ export const useWasteDataUpload = () => {
     const uploadSingleFile = async (file: File): Promise<string> => {
         try {
             console.log(`Uploading file: ${file.name}`);
+
             const result = await uploadFileMutation.mutateAsync(file);
             console.log(`File upload result:`, result);
 
-            let ipfsHash = null;
-            let attempts = 0;
-            const maxAttempts = 20;
-
-            while (!ipfsHash && attempts < maxAttempts) {
-                await new Promise(resolve => setTimeout(resolve, 500));
-                ipfsHash = uploadedInfo?.pieceCid;
-                attempts++;
-                console.log(`Attempt ${attempts}: Looking for IPFS hash...`);
-            }
-
-            if (ipfsHash) {
-                console.log(`File uploaded successfully with IPFS hash: ${ipfsHash}`);
-                // Return just the CID, not the full URL
-                return ipfsHash;
+            // Use the pieceCid directly from the result
+            if (result?.pieceCid) {
+                console.log(`File uploaded successfully with IPFS hash: ${result.pieceCid}`);
+                return result.pieceCid;
             } else {
-                console.warn(`Could not get IPFS hash, using mock hash for: ${file.name}`);
-                // Generate a proper mock CID format (bafk...)
+                console.warn(`No pieceCid in result, using mock hash for: ${file.name}`);
+                console.warn('Upload result:', result);
                 const mockHash = generateMockCID();
                 return mockHash;
             }
@@ -80,7 +70,9 @@ export const useWasteDataUpload = () => {
                     console.log(`Uploading evidence file ${i + 1}: ${file.name}`);
 
                     try {
+                        console.log(`Starting upload for evidence file ${i + 1}: ${file.name} (${file.size} bytes)`);
                         const ipfsHash = await uploadSingleFile(file);
+                        console.log(`Evidence file ${i + 1} uploaded successfully with hash: ${ipfsHash}`);
 
                         evidenceFileData.push({
                             cid: ipfsHash,
@@ -89,10 +81,12 @@ export const useWasteDataUpload = () => {
                         });
 
                         if (i < evidenceFiles.length - 1) {
+                            console.log('Waiting 2 seconds before next upload...');
                             await new Promise(resolve => setTimeout(resolve, 2000));
                         }
                     } catch (error) {
                         console.error(`Failed to upload evidence file ${i + 1}:`, error);
+                        console.error('Error details:', error);
                         evidenceFileData.push({
                             cid: generateMockCID(),
                             filename: file.name,
@@ -133,6 +127,7 @@ export const useWasteDataUpload = () => {
             console.log('Uploading waste data JSON to Filecoin...');
 
             try {
+                console.log('Starting upload of waste data JSON file...');
                 const ipfsHash = await uploadSingleFile(wasteDataFile);
                 console.log('Waste data uploaded successfully with IPFS hash:', ipfsHash);
 
@@ -144,6 +139,7 @@ export const useWasteDataUpload = () => {
                 };
             } catch (error: any) {
                 console.error('Failed to upload waste data JSON:', error);
+                console.error('Error details:', error);
 
                 const mockHash = generateMockCID();
                 console.warn('Using mock IPFS hash for waste data:', mockHash);
